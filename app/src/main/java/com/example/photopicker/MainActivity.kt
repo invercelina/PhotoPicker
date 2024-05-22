@@ -69,6 +69,9 @@ class MainActivity : ComponentActivity() {
             var selectedUriList: List<Uri?> by remember {
                 mutableStateOf(emptyList())
             }
+            var clicked by remember {
+                mutableStateOf(true)
+            }
             // save
             val pickMedia =
                 rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -78,36 +81,46 @@ class MainActivity : ComponentActivity() {
                 rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
                     selectedUriList = uris
                 }
-            AsyncImage(
-                model = "https://images.chosun.com/resizer/2iMXk-fN55ROgFxus5wG8TGz2WY=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/X3IXWG7P3FASROVWDGBT55BDCE.jpg",
-                contentDescription = null,
-                modifier = Modifier
-                    .size(300.dp)
-                    .clip(RoundedCornerShape(15.dp))
-                    .border(
-                        BorderStroke(4.dp, Color.Yellow),
-                        RoundedCornerShape(15.dp)
-                    )
-            )
-            selectedUriList.forEach { uri ->
-                Image(
-                    painter = rememberAsyncImagePainter(uri),
+            if (clicked) {
+                AsyncImage(
+                    model = "https://newsimg-hams.hankookilbo.com/2023/11/23/f5f38ca5-8ed4-49b2-b64c-9943cccfc55c.jpg",
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
-
                     modifier = Modifier
-                        .size(100.dp)
+                        .size(500.dp)
                         .clip(RoundedCornerShape(15.dp))
                         .border(
                             BorderStroke(4.dp, Color.Yellow),
                             RoundedCornerShape(15.dp)
                         ),
-                    colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0f) })
+                    contentScale = ContentScale.FillHeight
                 )
+            }
+            if (!clicked) {
+                selectedUriList.forEach { uri ->
+                    Image(
+                        painter = rememberAsyncImagePainter(uri),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                            .border(
+                                BorderStroke(4.dp, Color.Yellow),
+                                RoundedCornerShape(15.dp)
+                            ),
+                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
+                            setToSaturation(0f)
+                        })
+                    )
+                }
             }
             Button(
                 onClick = {
-                    pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+                    clicked = !clicked
+                    if (!clicked) {
+                        pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+                    }
 //                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
 //                    if (imageId == R.drawable.ic_android_black_24dp) {
 //                        imageId = R.drawable.ic_launcher_foreground
