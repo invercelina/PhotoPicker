@@ -17,8 +17,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,7 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.photopicker.ui.theme.PhotoPickerTheme
 
@@ -81,10 +84,16 @@ class MainActivity : ComponentActivity() {
                 rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
                     selectedUriList = uris
                 }
+
             if (clicked) {
-                AsyncImage(
+
+
+                SubcomposeAsyncImage(
                     model = "https://newsimg-hams.hankookilbo.com/2023/11/23/f5f38ca5-8ed4-49b2-b64c-9943cccfc55c.jpg",
                     contentDescription = null,
+                    loading = {
+                        CircularProgressIndicator()
+                    },
                     modifier = Modifier
                         .size(500.dp)
                         .clip(RoundedCornerShape(15.dp))
@@ -94,25 +103,29 @@ class MainActivity : ComponentActivity() {
                         ),
                     contentScale = ContentScale.FillHeight
                 )
+
+
             }
             if (!clicked) {
-                selectedUriList.forEach { uri ->
-                    Image(
-                        painter = rememberAsyncImagePainter(uri),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
+                LazyColumn {
+                    items(selectedUriList) { uri ->
+                        Image(
+                            painter = rememberAsyncImagePainter(uri),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
 
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clip(RoundedCornerShape(15.dp))
-                            .border(
-                                BorderStroke(4.dp, Color.Yellow),
-                                RoundedCornerShape(15.dp)
-                            ),
-                        colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
-                            setToSaturation(0f)
-                        })
-                    )
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(RoundedCornerShape(15.dp))
+                                .border(
+                                    BorderStroke(4.dp, Color.Yellow),
+                                    RoundedCornerShape(15.dp)
+                                ),
+                            colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
+                                setToSaturation(0f)
+                            })
+                        )
+                    }
                 }
             }
             Button(
@@ -151,4 +164,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
