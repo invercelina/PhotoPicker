@@ -14,7 +14,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,10 +33,10 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.photopicker.ui.theme.PhotoPickerTheme
 
@@ -79,6 +78,17 @@ class MainActivity : ComponentActivity() {
                 rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
                     selectedUriList = uris
                 }
+            AsyncImage(
+                model = "https://images.chosun.com/resizer/2iMXk-fN55ROgFxus5wG8TGz2WY=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/X3IXWG7P3FASROVWDGBT55BDCE.jpg",
+                contentDescription = null,
+                modifier = Modifier
+                    .size(300.dp)
+                    .clip(RoundedCornerShape(15.dp))
+                    .border(
+                        BorderStroke(4.dp, Color.Yellow),
+                        RoundedCornerShape(15.dp)
+                    )
+            )
             selectedUriList.forEach { uri ->
                 Image(
                     painter = rememberAsyncImagePainter(uri),
