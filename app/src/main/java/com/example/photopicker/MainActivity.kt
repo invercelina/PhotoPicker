@@ -66,28 +66,37 @@ class MainActivity : ComponentActivity() {
             var imageUri by remember {
                 mutableStateOf<Uri?>(null)
             }
+            var selectedUriList: List<Uri?> by remember {
+                mutableStateOf(emptyList())
+            }
             // save
             val pickMedia =
                 rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                     imageUri = uri
                 }
-            Image(
-                painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            val pickMultipleMedia =
+                rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
+                    selectedUriList = uris
+                }
+            selectedUriList.forEach { uri ->
+                Image(
+                    painter = rememberAsyncImagePainter(uri),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
 
-                modifier = Modifier
-                    .size(300.dp)
-                    .aspectRatio(16f / 9f)
-                    .clip(RoundedCornerShape(15.dp))
-                    .border(
-                        BorderStroke(4.dp, Color.Yellow),
-                        RoundedCornerShape(15.dp)
-                    )
-            )
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(15.dp))
+                        .border(
+                            BorderStroke(4.dp, Color.Yellow),
+                            RoundedCornerShape(15.dp)
+                        )
+                )
+            }
             Button(
                 onClick = {
-                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+//                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
 //                    if (imageId == R.drawable.ic_android_black_24dp) {
 //                        imageId = R.drawable.ic_launcher_foreground
 //                    } else {
