@@ -31,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -81,7 +80,7 @@ class SubActivity : ComponentActivity() {
                         .fillMaxWidth()
                         .padding(bottom = 20.dp)
                 ) {
-                    if (selectedUriList.size > 2) {
+                    if (imageNumber >= 1) {
                         Row(
                             horizontalArrangement = Arrangement.Start,
                             modifier = Modifier
@@ -91,7 +90,7 @@ class SubActivity : ComponentActivity() {
                             Text(text = "이전")
                         }
                     }
-                    if (selectedUriList.size > 1) {
+                    if (selectedUriList.size >= 2 && imageNumber < selectedUriList.size - 1) {
                         Row(
                             horizontalArrangement = Arrangement.End,
                             modifier = Modifier
@@ -113,7 +112,7 @@ class SubActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier.weight(0.5f)
                 ) {
-                    if (selectedUriList.size > 2 && imageNumber >= 1) {
+                    if (selectedUriList.size >= 2 && imageNumber >= 1) {
                         Image(
                             painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber - 1]),
                             contentScale = ContentScale.Crop,
@@ -130,16 +129,7 @@ class SubActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.weight(0.5f)
                 ) {
-                    if (selectedUriList.size == 2) {
-                        Image(
-                            painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber + 1]),
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .size(100.dp),
-                            contentDescription = null
-                        )
-                    } else if (selectedUriList.size > 2 && imageNumber + 1 < selectedUriList.size) {
+                    if (selectedUriList.size >= 2 && imageNumber + 1 < selectedUriList.size) {
                         Image(
                             painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber + 1]),
                             contentScale = ContentScale.Crop,
@@ -157,12 +147,14 @@ class SubActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxWidth(1f)
             ) {
                 Spacer(modifier = Modifier.height(100.dp))
+                // 버튼
                 Button(onClick = {
                     pickMultipleMedia.launch(
                         PickVisualMediaRequest(
                             ActivityResultContracts.PickVisualMedia.ImageAndVideo
                         )
                     )
+                    imageNumber = 0
                 }) {
                     Text(text = "선택", modifier = Modifier.padding(horizontal = 30.dp))
                 }
