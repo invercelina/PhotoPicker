@@ -63,18 +63,9 @@ class SubActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (selectedUriList.isNotEmpty() && selectedUriList.size < 3) {
+                if (selectedUriList.isNotEmpty()) {
                     Image(
-                        painter = rememberAsyncImagePainter(model = selectedUriList[0]),
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(300.dp),
-                        contentDescription = null
-                    )
-                } else if (selectedUriList.size > 2) {
-                    Image(
-                        painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber + 1]),
+                        painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber]),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .clip(CircleShape)
@@ -83,12 +74,33 @@ class SubActivity : ComponentActivity() {
                     )
                 }
             }
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Row(horizontalArrangement = Arrangement.Start, modifier = Modifier.weight(0.5f)) {
-                    Text(text = "이전")
-                }
-                Row(horizontalArrangement = Arrangement.End, modifier = Modifier.weight(0.5f)) {
-                    Text(text = "다음")
+            // 이전, 다음 텍스트
+            if (selectedUriList.isNotEmpty()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp)
+                ) {
+                    if (selectedUriList.size > 2) {
+                        Row(
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier
+                                .weight(0.5f)
+                                .padding(start = 30.dp)
+                        ) {
+                            Text(text = "이전")
+                        }
+                    }
+                    if (selectedUriList.size > 1) {
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier
+                                .weight(0.5f)
+                                .padding(end = 30.dp)
+                        ) {
+                            Text(text = "다음")
+                        }
+                    }
                 }
             }
 
@@ -101,9 +113,9 @@ class SubActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier.weight(0.5f)
                 ) {
-                    if (selectedUriList.size > 2 && imageNumber >= 0) {
+                    if (selectedUriList.size > 2 && imageNumber >= 1) {
                         Image(
-                            painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber]),
+                            painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber - 1]),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .clip(CircleShape)
@@ -120,16 +132,16 @@ class SubActivity : ComponentActivity() {
                 ) {
                     if (selectedUriList.size == 2) {
                         Image(
-                            painter = rememberAsyncImagePainter(model = selectedUriList[1]),
+                            painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber + 1]),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .clip(CircleShape)
                                 .size(100.dp),
                             contentDescription = null
                         )
-                    } else if (selectedUriList.size > 2 && imageNumber + 2 < selectedUriList.size) {
+                    } else if (selectedUriList.size > 2 && imageNumber + 1 < selectedUriList.size) {
                         Image(
-                            painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber + 2]),
+                            painter = rememberAsyncImagePainter(model = selectedUriList[imageNumber + 1]),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .clip(CircleShape)
